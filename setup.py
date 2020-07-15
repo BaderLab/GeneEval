@@ -13,9 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/BaderLab/GeneEval",
     packages=setuptools.find_packages(),
-    keywords=[
-        "gene embeddings",
-    ],
+    keywords=["gene embeddings",],
     classifiers=[
         "Development Status :: 1 - Planning",
         "Environment :: Console",
@@ -32,6 +30,14 @@ setuptools.setup(
     python_requires=">=3.6.1",
     install_requires=["skorch>=0.8.0"],
     extras_require={
-        "dev": ["black", "flake8", "hypothesis", "pytest", "pytest-cov", "coverage", "codecov"]
+        "dev": [
+            "black",
+            "flake8",
+            "hypothesis",
+            "pytest",
+            "pytest-cov",
+            "coverage",
+            "codecov",
+        ]
     },
 )

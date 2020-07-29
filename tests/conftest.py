@@ -1,5 +1,6 @@
 import pytest
 import pandas as pd
+from pathlib import Path
 
 
 @pytest.fixture
@@ -14,20 +15,20 @@ def embeddings_dataframe() -> pd.DataFrame:
 
 
 @pytest.fixture
-def embeddings_json_filepath() -> str:
-    return "tests/data/embeddings.json"
+def embeddings_json_filepath() -> Path:
+    return Path("tests/data/embeddings.json")
 
 
 @pytest.fixture
-def embeddings_tsv_filepath() -> str:
-    return "tests/data/embeddings.tsv"
+def embeddings_tsv_filepath() -> Path:
+    return Path("tests/data/embeddings.tsv")
 
 
 @pytest.fixture
-def embeddings_csv_filepath() -> str:
-    return "tests/data/embeddings.csv"
+def embeddings_csv_filepath() -> Path:
+    return Path("tests/data/embeddings.csv")
 
 
 @pytest.fixture
-def embeddings_txt_filepath() -> str:
-    return "tests/data/embeddings.txt"
+def embeddings_txt_filepath() -> Path:
+    return Path("tests/data/embeddings.txt")

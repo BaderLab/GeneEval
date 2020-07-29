@@ -2,9 +2,8 @@ import pandas as pd
 from pathlib import Path
 
 
-def load_embeddings(filepath: str) -> pd.DataFrame:
+def load_embeddings(filepath: Path) -> pd.DataFrame:
     delimiters = {".tsv": "\t", ".csv": ", ", ".txt": "\s+"}  # noqa
-    filepath = Path(filepath)
 
     if filepath.suffix == ".json":
         embeddings = pd.read_json(filepath).T

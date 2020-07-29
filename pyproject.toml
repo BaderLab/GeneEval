@@ -1,3 +1,39 @@
+[tool.poetry]
+name = "geneeval"
+version = "0.1.0-alpha.0"
+description = "A Python library for evaluating gene embeddings"
+license = "Apache-2.0"
+authors = ["johngiorgi <johnmgiorgi@gmail.com>", "duncanforster <duncan.forster@mail.utoronto.ca>"]
+readme = "README.md"
+repository = "https://github.com/BaderLab/GeneEval"
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+overrides = "^3.1.0"
+pandas = "^1.1.0"
+skorch = "^0.8.0"
+typer = {extras = ["all"], version = "^0.3.1"}
+
+[tool.poetry.dev-dependencies]
+black = "^19.10b0"
+flake8 = "^3.8.3"
+hypothesis = "^5.23.7"
+pytest = "^6.0.0"
+pytest-cov = "^2.10.0"
+coverage = "^5.2.1"
+codecov = "^2.1.8"
+
+[tool.poetry.scripts]
+geneeval = "geneeval.main:app"
+
 [tool.black]
 line-length = 100
 
@@ -17,3 +53,9 @@ exclude = '''
     | \bdoc\b
 )
 '''
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+

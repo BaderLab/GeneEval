@@ -1,21 +1,34 @@
 import typer
+from typing import Optional, List
+from pathlib import Path
 
 app = typer.Typer()
 
 
-def run() -> None:
-    app()
-
-
 @app.command()
-def download() -> None:
+def prepare(
+    filepath: Path = typer.Argument(..., writable=True, help="Filepath to save the task data."),
+    include_tasks: Optional[List[str]] = typer.Option(
+        None, help="A list of task names to include in the evaluation."
+    ),
+    exclude_tasks: Optional[List[str]] = typer.Option(
+        None, help="A list of task names to exclude in the evaluation."
+    ),
+) -> None:
     typer.echo("Downloading data for task...")
 
 
 @app.command()
-def evaluate() -> None:
+def evaluate(
+    filepath: Path = typer.Argument(
+        ..., exists=True, dir_okay=False, help="Filepath to the gene embeddings."
+    ),
+    include_tasks: Optional[List[str]] = typer.Option(
+        None, help="A list of task names to include in the evaluation."
+    ),
+    exclude_tasks: Optional[List[str]] = typer.Option(
+        None, help="A list of task names to exclude in the evaluation."
+    ),
+) -> None:
+
     typer.echo("Evaluating data for task...")
-
-
-if __name__ == "__main__":
-    app()

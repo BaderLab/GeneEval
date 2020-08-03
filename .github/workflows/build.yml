@@ -15,35 +15,44 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        # They poetry action only supports Linux.
+        os: [ubuntu-latest]
         python-version: [3.8]
 
     steps:
     - uses: actions/checkout@v2
+    # This is not particularly elegant, as we install python in the poetry action as well.
+    # But we need this to run the tests with pytest.
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2.1.1
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-        poetry install
+      uses: abatilo/actions-poetry@v1.5.0
+      with:
+        python_version: ${{ matrix.python-version }}
+        args: install
     - name: Format code with black
       run: |
-        black -l 100 geneeval
+        black .
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        flake8 geneeval --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings.
-        flake8 geneeval --count --exit-zero --max-complexity=10 --max-line-length=115 --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=115 --statistics
     - name: Test with pytest
       run: |
-        pytest tests -rf --cov ./geneeval --cov-report=xml --cov-config=./.coveragerc 
+        pytest -q tests -n 2 --cov-report=xml --cov-config=./.coveragerc 
     - name: Upload coverage to Codecov
-      if: matrix.python-version == '3.7' && matrix.os == 'ubuntu-latest' && github.event_name == 'push'
+      # We don't want to push coverge for every job in the matrix.
+      # Rather arbitrarily, choose to push on Ubuntu with Python 3.8.
+      if: matrix.python-version == '3.8' && matrix.os == 'ubuntu-latest' && github.event_name == 'push'
       uses: codecov/codecov-action@v1.0.12
       with:
         file: ./coverage.xml
+        # Ignore codecov failures as the codecov server is not
+        # very reliable but we don't want to report a failure
+        # in the github UI just because the coverage report failed to
+        # be published.
         fail_ci_if_error: false

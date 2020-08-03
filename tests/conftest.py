@@ -1,6 +1,9 @@
 import pytest
 import pandas as pd
 from pathlib import Path
+import orjson
+from typing import Dict
+import numpy as np
 
 
 @pytest.fixture
@@ -32,3 +35,22 @@ def embeddings_csv_filepath() -> Path:
 @pytest.fixture
 def embeddings_txt_filepath() -> Path:
     return Path("tests/data/embeddings.txt")
+
+
+@pytest.fixture
+def benchmark_filepath() -> Path:
+    return Path("tests/data/benchmark.json")
+
+
+@pytest.fixture
+def benchmark(benchmark_filepath: Path) -> Dict:
+    with open(benchmark_filepath, "r") as f:
+        benchmark = orjson.loads(f.read())
+    return benchmark
+
+
+@pytest.fixture
+def benchmark_embeddings_dataframe(benchmark: Dict) -> pd.DataFrame:
+    ids = benchmark["inputs"].keys()
+    embeddings = np.random.randn(len(ids), 5)
+    return pd.DataFrame({id_: embedding for id_, embedding in zip(ids, embeddings)}).T

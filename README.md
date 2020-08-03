@@ -1,4 +1,6 @@
 ![build](https://github.com/BaderLab/GeneEval/workflows/build/badge.svg)
+[![codecov](https://codecov.io/gh/BaderLab/GeneEval/branch/master/graph/badge.svg)](https://codecov.io/gh/BaderLab/GeneEval)
+![GitHub](https://img.shields.io/github/license/JohnGiorgi/allennlp-multi-label-classification?color=blue)
 
 # GeneEval
 

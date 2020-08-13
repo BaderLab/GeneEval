@@ -145,7 +145,7 @@ description = "A library for property-based testing"
 name = "hypothesis"
 optional = false
 python-versions = ">=3.5.2"
-version = "5.23.9"
+version = "5.24.2"
 
 [package.dependencies]
 attrs = ">=19.2.0"
@@ -573,8 +573,7 @@ secure = ["certifi", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "pyOpenSSL (>=0
 socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7,<2.0)"]
 
 [metadata]
-content-hash = "e748d3cc0836dba5943257f10359c46e0eeb6c2df27c5754587465d2df0dd484"
-lock-version = "1.0"
+content-hash = "1132dd548ebb34e968f824271d02eaf25b7bde4b99fe28804eaaec771389ecf5"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -664,8 +663,8 @@ flake8 = [
     {file = "flake8-3.8.3.tar.gz", hash = "sha256:f04b9fcbac03b0a3e58c0ab3a0ecc462e023a9faf046d57794184028123aa208"},
 ]
 hypothesis = [
-    {file = "hypothesis-5.23.9-py3-none-any.whl", hash = "sha256:0400b95556216ae3e345f760726c89f8fb6ae47a22f41600868f692a2298773d"},
-    {file = "hypothesis-5.23.9.tar.gz", hash = "sha256:1dc52986324802b1c5b2fe3edc96d22f58a0fb20aacfdb0ebe9d1038ca397485"},
+    {file = "hypothesis-5.24.2-py3-none-any.whl", hash = "sha256:13cdb53377a68da9d863a5f3ee14d1fa7dd70172a5c6dc2008ea1ce8e9beb7e9"},
+    {file = "hypothesis-5.24.2.tar.gz", hash = "sha256:abf041341b7da81666dce36c2741e0f53d8a34ee68a17c85fb099bc6759fde16"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},

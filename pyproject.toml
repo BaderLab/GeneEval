@@ -26,7 +26,7 @@ orjson = "^3.3.0"
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
 flake8 = "^3.8.3"
-hypothesis = "^5.23.7"
+hypothesis = "^5.27.0"
 pytest = "^6.0.0"
 pytest-cov = "^2.10.0"
 coverage = "^5.2.1"

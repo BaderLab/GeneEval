@@ -1,10 +1,10 @@
 from sklearn import preprocessing
 from typing import Dict
 import numpy as np
-import orjson
 from sklearn.model_selection import PredefinedSplit
 from dataclasses import dataclass
 import pandas as pd
+from geneeval.common.data_utils import load_benchmark
 
 
 @dataclass(frozen=True)
@@ -17,12 +17,12 @@ class PreprocessedData:
 
 
 class DatasetReader:
-    def __new__(
-        self, embeddings: pd.DataFrame, task: str, benchmark_filepath: str = "benchmark.json"
-    ) -> Dict[str, PreprocessedData]:
+    """Given a dataframe of gene embeddings, returns a `PreprocessedData` containing everything we
+    need to train and evaluate with Sklearn."""
 
-        with open(benchmark_filepath, "r") as f:
-            benchmark = orjson.loads(f.read())
+    def __new__(self, embeddings: pd.DataFrame, task: str) -> Dict[str, PreprocessedData]:
+
+        benchmark = load_benchmark()
         standard, task_name = task.split(".")
         partitions = benchmark["evals"][standard][task_name]
 
@@ -41,8 +41,12 @@ class DatasetReader:
             binarized_labels = lb.fit_transform(
                 [label for partition in partitions.values() for label in partition.values()]
             )
+
             y_train = binarized_labels[: X_train.shape[0]]
             y_test = binarized_labels[X_train.shape[0] :]
+
+            if y_train.shape[-1] == 1 and y_test.shape[-1] == 1:
+                y_train, y_test = y_train.squeeze(-1), y_test.squeeze(-1)
 
             test_fold = np.asarray(len(partitions["train"]) * [-1] + len(partitions["valid"]) * [0])
             splits = PredefinedSplit(test_fold)

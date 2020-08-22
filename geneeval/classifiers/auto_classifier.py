@@ -9,7 +9,8 @@ from geneeval.common.utils import TASK_NAMES
 
 
 class AutoClassifier:
-    """A factory function, which returns the correct classifiers for a given `task`."""
+    """A factory function, which returns the correct classifiers for a given `task`.
+    """
 
     def __new__(
         self, task: str, data: PreprocessedData

@@ -4,7 +4,7 @@
 
 # GeneEval
 
-A Python library for evaluating gene embeddings.
+A Python library for benchmarking gene function prediction.
 
 ## Installation
 

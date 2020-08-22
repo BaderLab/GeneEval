@@ -12,17 +12,17 @@ class Engine:
 
     def __init__(
         self,
-        embeddings: pd.DataFrame,
+        features: pd.DataFrame,
         include_tasks: Optional[Union[str, List[str]]] = None,
         exclude_tasks: Optional[Union[str, List[str]]] = None,
     ) -> None:
-        self._embeddings = embeddings
+        self._features = features
         self._tasks = resolve_tasks(include_tasks, exclude_tasks)
         self.results = {}
 
     def run(self) -> None:
         for task in self._tasks:
-            data = DatasetReader(self._embeddings, task)
+            data = DatasetReader(self._features, task)
 
             classifier = AutoClassifier(task, data)
             if isinstance(classifier, tuple):

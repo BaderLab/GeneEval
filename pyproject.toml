@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "geneeval"
 version = "0.1.0-alpha.0"
-description = "A Python library for evaluating gene embeddings"
+description = "A Python library for benchmarking gene function prediction."
 license = "Apache-2.0"
 authors = ["johngiorgi <johnmgiorgi@gmail.com>", "duncanforster <duncan.forster@mail.utoronto.ca>"]
 readme = "README.md"

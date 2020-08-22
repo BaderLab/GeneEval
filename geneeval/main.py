@@ -3,7 +3,7 @@ from typing import List
 from pathlib import Path
 from geneeval.engine import Engine
 import orjson
-from geneeval.common.data_utils import load_embeddings, load_benchmark
+from geneeval.common.data_utils import load_features, load_benchmark
 from geneeval.metrics.auto_metric import AutoMetric
 from collections import defaultdict
 
@@ -32,7 +32,7 @@ def prepare(
 @evaluate_app.command("features")
 def evaluate_features(
     filepath: Path = typer.Argument(
-        ..., exists=True, dir_okay=False, help="Filepath to the gene embeddings."
+        ..., exists=True, dir_okay=False, help="Filepath to the gene features."
     ),
     include_tasks: List[str] = typer.Option(
         None, help="A task name (or list of task names) to include in the evaluation."
@@ -45,8 +45,8 @@ def evaluate_features(
     with `include_tasks` and `exclude_tasks` respectively.
     """
 
-    embeddings = load_embeddings(filepath)
-    engine = Engine(embeddings, include_tasks, exclude_tasks)
+    features = load_features(filepath)
+    engine = Engine(features, include_tasks, exclude_tasks)
     engine.run()
 
     # Nicely display results in the console.

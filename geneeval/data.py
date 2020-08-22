@@ -17,10 +17,10 @@ class PreprocessedData:
 
 
 class DatasetReader:
-    """Given a dataframe of gene embeddings, returns a `PreprocessedData` containing everything we
+    """Given a dataframe of gene features, returns a `PreprocessedData` containing everything we
     need to train and evaluate with Sklearn."""
 
-    def __new__(self, embeddings: pd.DataFrame, task: str) -> Dict[str, PreprocessedData]:
+    def __new__(self, features: pd.DataFrame, task: str) -> Dict[str, PreprocessedData]:
 
         benchmark = load_benchmark()
         standard, task_name = task.split(".")
@@ -32,10 +32,10 @@ class DatasetReader:
         ):
             lb = preprocessing.LabelBinarizer()
 
-            X_train = embeddings.loc[
+            X_train = features.loc[
                 list(partitions["train"].keys()) + list(partitions["valid"].keys())
             ].values
-            X_test = embeddings.loc[list(partitions["test"].keys())].values
+            X_test = features.loc[list(partitions["test"].keys())].values
 
             # fit_transform partitions together so binarization is the same across partitions.
             binarized_labels = lb.fit_transform(

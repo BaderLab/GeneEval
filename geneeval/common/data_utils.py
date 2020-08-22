@@ -6,7 +6,7 @@ import orjson
 BENCHMARK_FILEPATH = "benchmark.json"
 
 
-def load_embeddings(filepath: Union[str, Path], **kwargs) -> pd.DataFrame:
+def load_features(filepath: Union[str, Path], **kwargs) -> pd.DataFrame:
     """Load delimited data from `filepath`. `**kwargs` will be passed to `pd.load_json` or
     `pd.load_csv`.
     """
@@ -14,19 +14,19 @@ def load_embeddings(filepath: Union[str, Path], **kwargs) -> pd.DataFrame:
     delimiters = {".tsv": "\t", ".csv": ",", ".txt": r"\s+"}  # noqa
 
     if filepath.suffix == ".json":
-        embeddings = pd.read_json(filepath, **kwargs).T
+        features = pd.read_json(filepath, **kwargs).T
     elif filepath.suffix in delimiters:
         sep = delimiters[filepath.suffix]
-        embeddings = pd.read_csv(filepath, sep=sep, header=None, index_col=0, **kwargs)
-        embeddings.index.name = None
-        embeddings.columns = list(range(embeddings.shape[1]))
+        features = pd.read_csv(filepath, sep=sep, header=None, index_col=0, **kwargs)
+        features.index.name = None
+        features.columns = list(range(features.shape[1]))
     else:
         raise ValueError(
             "Expected file extension to be one of: .json, .tsv, .csv or .txt."
             f" Got {filepath.suffix}."
         )
 
-    return embeddings.astype("float32", copy=False)
+    return features.astype("float32", copy=False)
 
 
 def load_benchmark():

@@ -10,7 +10,41 @@ from geneeval.common import data_utils
 
 
 @pytest.fixture
-def embeddings_dataframe() -> pd.DataFrame:
+def features_json_filepath() -> Path:
+    return Path("tests/data/features.json")
+
+
+@pytest.fixture
+def features_tsv_filepath() -> Path:
+    return Path("tests/data/features.tsv")
+
+
+@pytest.fixture
+def features_csv_filepath() -> Path:
+    return Path("tests/data/features.csv")
+
+
+@pytest.fixture
+def features_txt_filepath() -> Path:
+    return Path("tests/data/features.txt")
+
+
+@pytest.fixture
+def benchmark_filepath() -> Path:
+    return Path("tests/data/benchmark.json")
+
+
+@pytest.fixture
+def benchmark_filepath_manager(benchmark_filepath: str) -> None:
+    """Temporarily changes the benchmark filepath to the dummy benchmark for testing."""
+    prev = data_utils.BENCHMARK_FILEPATH
+    data_utils.BENCHMARK_FILEPATH = benchmark_filepath
+    yield
+    data_utils.BENCHMARK_FILEPATH = prev
+
+
+@pytest.fixture
+def features_dataframe() -> pd.DataFrame:
     return (
         pd.DataFrame(
             {
@@ -27,51 +61,19 @@ def embeddings_dataframe() -> pd.DataFrame:
 
 
 @pytest.fixture
-def embeddings_json_filepath() -> Path:
-    return Path("tests/data/embeddings.json")
-
-
-@pytest.fixture
-def embeddings_tsv_filepath() -> Path:
-    return Path("tests/data/embeddings.tsv")
-
-
-@pytest.fixture
-def embeddings_csv_filepath() -> Path:
-    return Path("tests/data/embeddings.csv")
-
-
-@pytest.fixture
-def embeddings_txt_filepath() -> Path:
-    return Path("tests/data/embeddings.txt")
-
-
-@pytest.fixture
-def benchmark() -> Dict:
-    # Return a loaded dummy benchmark by temporarily adjusting the filepath.
-    prev = data_utils.BENCHMARK_FILEPATH
-    data_utils.BENCHMARK_FILEPATH = Path("tests/data/benchmark.json")
-    with open(data_utils.BENCHMARK_FILEPATH, "r") as f:
-        yield orjson.loads(f.read())
-    data_utils.BENCHMARK_FILEPATH = prev
-
-
-@pytest.fixture
-def benchmark_embeddings_dataframe(benchmark: Dict) -> pd.DataFrame:
-    ids = benchmark["inputs"].keys()
-    embeddings = np.random.randn(len(ids), 5)
-    df = pd.DataFrame({id_: embedding for id_, embedding in zip(ids, embeddings)})
-    df = df.astype("float32", copy=False).T
-    return df
-
-
-@pytest.fixture
-def preprocessed_data(benchmark_embeddings_dataframe):
+def preprocessed_data(features_dataframe: pd.DataFrame) -> PreprocessedData:
     kwargs = {
-        "X_train": benchmark_embeddings_dataframe[:4].to_numpy(),
+        "X_train": features_dataframe[:4].to_numpy(),
         "y_train": np.array([0, 0, 1, 1]),
-        "X_test": benchmark_embeddings_dataframe[4:5].to_numpy(),
+        "X_test": features_dataframe[4:5].to_numpy(),
         "y_test": np.array([1]),
         "splits": PredefinedSplit([-1, -1, -1, 0]),
     }
     return PreprocessedData(**kwargs)
+
+
+@pytest.fixture
+def benchmark(benchmark_filepath: str) -> Dict:
+    with open(benchmark_filepath, "r") as f:
+        benchmark = orjson.loads(f.read())
+    return benchmark

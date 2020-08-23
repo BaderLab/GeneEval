@@ -30,6 +30,11 @@ def features_txt_filepath() -> Path:
 
 
 @pytest.fixture
+def predictions_filepath() -> Path:
+    return Path("tests/data/predictions.json")
+
+
+@pytest.fixture
 def benchmark_filepath() -> Path:
     return Path("tests/data/benchmark.json")
 

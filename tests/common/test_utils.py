@@ -45,6 +45,7 @@ class TestUtils:
         task_name = list(TASK_NAMES)[0]
         partially_specified = resolve_tasks(exclude_tasks=task_name.split(".")[0])
         fully_specified = resolve_tasks(exclude_tasks=task_name)
+        expected = list(TASK_NAMES - {task_name})
 
-        assert partially_specified == list(TASK_NAMES - {task_name})
-        assert fully_specified == list(TASK_NAMES - {task_name})
+        assert partially_specified == expected
+        assert fully_specified == expected

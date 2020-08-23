@@ -52,7 +52,7 @@ Q1ENB6, 0.1433, -0.3242, 0.5323, -0.9975, -0.4573
 Q9XF19, 0.5621, -0.4272, 0.9743, -0.1373, -0.2173
 ```
 
-> You can prepare a `.csv`, `.tsv`, `.txt` (separated by spaces) or a `.json` file (where the vectors are keyed by gene IDs). We will correctly parse the file parsed on its file extension.
+> You can prepare a `.csv`, `.tsv`, `.txt` (separated by spaces) or a `.json` file (where the vectors are keyed by gene IDs). We will correctly parse the file based on its file extension.
 
 and then call the `evaluate features` command
 

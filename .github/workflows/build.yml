@@ -30,6 +30,7 @@ jobs:
       - name: Install dependencies with Poetry
         run: |
           poetry install
+          poetry shell
       - name: Format code with black
         run: |
           black .

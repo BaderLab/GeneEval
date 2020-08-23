@@ -3,7 +3,7 @@ from hypothesis.strategies import text
 from hypothesis import given
 from geneeval.common.utils import TASK_NAMES
 from geneeval.metrics.auto_metric import AutoMetric
-from sklearn.metrics import accuracy_score
+from sklearn import metrics
 
 
 class TestAutoMetric:
@@ -16,4 +16,4 @@ class TestAutoMetric:
         for task in TASK_NAMES:
             metric = AutoMetric(task=task)
             if task.endswith("binary_classification"):
-                assert isinstance(metric, accuracy_score)
+                assert metric == metrics.accuracy_score

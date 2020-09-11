@@ -129,8 +129,8 @@ category = "dev"
 description = "A library for property-based testing"
 name = "hypothesis"
 optional = false
-python-versions = ">=3.5.2"
-version = "5.27.0"
+python-versions = ">=3.6"
+version = "5.34.1"
 
 [package.dependencies]
 attrs = ">=19.2.0"
@@ -546,7 +546,7 @@ socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7,<2.0)"]
 features = ["torch", "skorch"]
 
 [metadata]
-content-hash = "f60e3af3f28e6f713816bf682ce6b04e8f71af369f9970ad5dbabe063450f400"
+content-hash = "c4c6095b6e83c9030d49cf315eb4d5383f190ee65991efab4d4f8768d4b4bf55"
 lock-version = "1.0"
 python-versions = "^3.8"
 
@@ -632,8 +632,8 @@ future = [
     {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
 ]
 hypothesis = [
-    {file = "hypothesis-5.27.0-py3-none-any.whl", hash = "sha256:2249f4d4e79183492d65b6b3ea8a72b614da5591e7e31a08702e57b14824bcb0"},
-    {file = "hypothesis-5.27.0.tar.gz", hash = "sha256:562388169c7fde55900b73fa0fc9576efc32f593dcdc5227d441f733bacc0015"},
+    {file = "hypothesis-5.34.1-py3-none-any.whl", hash = "sha256:2c755ce0cf07426722d21ec2f594f430532a47ba801665c7ad0631cf0aea5a78"},
+    {file = "hypothesis-5.34.1.tar.gz", hash = "sha256:0e1a74b245d76fb6c8e5ad1b9b293de226020b0c88976150d2309e969c176121"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},

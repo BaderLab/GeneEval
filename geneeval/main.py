@@ -7,7 +7,6 @@ from geneeval.common.data_utils import load_features, load_benchmark
 from geneeval.metrics.auto_metric import AutoMetric
 from collections import defaultdict
 
-
 app = typer.Typer()
 evaluate_app = typer.Typer()
 app.add_typer(evaluate_app, name="evaluate")
@@ -63,8 +62,7 @@ def evaluate_predictions(
         ..., exists=True, dir_okay=False, help="Filepath to the gene label predictions."
     ),
 ) -> None:
-    """Evaluate predictions on the benchmark.
-    """
+    """Evaluate predictions on the benchmark."""
 
     with open(filepath, "r") as f:
         predictions = orjson.loads(f.read())

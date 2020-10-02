@@ -65,7 +65,6 @@ class LRClassifier(SupervisedClassifier):
 class MLPClassifier(SupervisedClassifier):
     """A multi-layer perceptron classifier for classification tasks."""
 
-    metric = metrics.accuracy_score
     param_grid = {
         "lr": [1e-4, 5e-5],
         "module__hidden_dim": [50, 100, 200],
@@ -75,7 +74,9 @@ class MLPClassifier(SupervisedClassifier):
     def __init__(self, data: PreprocessedData) -> None:
         embedding_dim = data.X_train[0].shape[-1]
         num_classes = data.y_train.shape[-1]
+        multi_class = num_classes > 1
         multi_label = np.sum(data.y_train, axis=-1).max() > 1
+        metric = metrics.f1_score if multi_class or multi_label else metrics.accuracy_score
 
         estimator = NeuralNetClassifier(
             module=MLP,
@@ -86,10 +87,7 @@ class MLPClassifier(SupervisedClassifier):
         )
 
         super().__init__(
-            estimator=estimator,
-            data=data,
-            metric=MLPClassifier.metric,
-            param_grid=MLPClassifier.param_grid,
+            estimator=estimator, data=data, metric=metric, param_grid=MLPClassifier.param_grid,
         )
 
 

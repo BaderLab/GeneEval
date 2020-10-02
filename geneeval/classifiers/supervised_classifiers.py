@@ -1,12 +1,13 @@
-from typing import Dict, Union, List, Optional
-from sklearn.linear_model import LogisticRegressionCV
-from sklearn.model_selection import GridSearchCV
-from geneeval.data import PreprocessedData
-from torch import nn
-from sklearn import metrics
+from typing import Dict, List, Optional, Union
+
 import numpy as np
-from skorch import NeuralNetClassifier
+from geneeval.data import PreprocessedData
+from sklearn import metrics
+from sklearn.linear_model import LogisticRegressionCV
 from sklearn.metrics import make_scorer
+from sklearn.model_selection import GridSearchCV
+from skorch import NeuralNetClassifier
+from torch import nn
 
 
 class SupervisedClassifier:
@@ -49,18 +50,21 @@ class SupervisedClassifier:
         }
 
 
-class BinaryClassifierLR(SupervisedClassifier):
-    """A logistic regression classifier for binary classification tasks.
+class LRClassifier(SupervisedClassifier):
+    """A logistic regression classifier for classification tasks.
     """
 
-    metric = metrics.accuracy_score
-
     def __init__(self, data: PreprocessedData) -> None:
+        multi_class = data.y_train.shape[-1] > 1
+        multi_label = np.sum(data.y_train, axis=-1).max() > 1
+        metric = metrics.f1_score if multi_class or multi_label else metrics.accuracy_score
         estimator = LogisticRegressionCV(cv=data.splits, refit=True)
-        super().__init__(estimator=estimator, data=data, metric=BinaryClassifierLR.metric)
+        super().__init__(estimator=estimator, data=data, metric=metric)
 
 
-class BinaryClassifierMLP(SupervisedClassifier):
+class MLPClassifier(SupervisedClassifier):
+    """A multi-layer perceptron classifier for classification tasks."""
+
     metric = metrics.accuracy_score
     param_grid = {
         "lr": [1e-4, 5e-5],
@@ -70,25 +74,28 @@ class BinaryClassifierMLP(SupervisedClassifier):
 
     def __init__(self, data: PreprocessedData) -> None:
         embedding_dim = data.X_train[0].shape[-1]
+        num_classes = data.y_train.shape[-1]
         multi_label = np.sum(data.y_train, axis=-1).max() > 1
 
         estimator = NeuralNetClassifier(
             module=MLP,
             train_split=None,
             module__embedding_dim=embedding_dim,
-            module__num_classes=2,
+            module__num_classes=num_classes,
             module__multi_label=multi_label,
         )
 
         super().__init__(
             estimator=estimator,
             data=data,
-            metric=BinaryClassifierMLP.metric,
-            param_grid=BinaryClassifierMLP.param_grid,
+            metric=MLPClassifier.metric,
+            param_grid=MLPClassifier.param_grid,
         )
 
 
 class MLP(nn.Module):
+    """A simple feed-forward neural network."""
+
     def __init__(
         self,
         embedding_dim: int,

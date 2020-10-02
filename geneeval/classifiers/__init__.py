@@ -1,5 +1,5 @@
 from geneeval.classifiers.supervised_classifiers import (
-    BinaryClassifierLR,
-    BinaryClassifierMLP,
+    LRClassifier,
+    MLPClassifier,
     SupervisedClassifier,
 )

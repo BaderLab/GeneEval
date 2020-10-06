@@ -31,26 +31,30 @@ class TestDataUtils:
         self, features_dataframe: pd.DataFrame, features_json_filepath: Path
     ) -> None:
         pd.testing.assert_frame_equal(
-            features_dataframe, load_features(features_json_filepath),
+            features_dataframe,
+            load_features(features_json_filepath),
         )
 
     def test_load_features_tsv(
         self, features_dataframe: pd.DataFrame, features_tsv_filepath: Path
     ) -> None:
         pd.testing.assert_frame_equal(
-            features_dataframe, load_features(features_tsv_filepath),
+            features_dataframe,
+            load_features(features_tsv_filepath),
         )
 
     def test_load_features_csv(
         self, features_dataframe: pd.DataFrame, features_csv_filepath: Path
     ) -> None:
         pd.testing.assert_frame_equal(
-            features_dataframe, load_features(features_csv_filepath),
+            features_dataframe,
+            load_features(features_csv_filepath),
         )
 
     def test_load_features_txt(
         self, features_dataframe: pd.DataFrame, features_txt_filepath: Path
     ) -> None:
         pd.testing.assert_frame_equal(
-            features_dataframe, load_features(features_txt_filepath),
+            features_dataframe,
+            load_features(features_txt_filepath),
         )

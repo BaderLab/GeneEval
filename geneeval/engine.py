@@ -30,6 +30,7 @@ class Engine:
                 for estimator, model in zip(classifier, results):
                     estimator.fit()
                     results[model] = estimator.score()
+                    print(estimator.score())
             else:
                 estimator = classifier
                 estimator.fit()

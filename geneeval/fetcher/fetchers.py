@@ -9,7 +9,7 @@ from requests.exceptions import ConnectionError
 import pandas as pd
 
 from abc import ABCMeta, abstractmethod
-from typing import List, Tuple, Callable, Union, Dict, Any
+from typing import List, Callable, Dict, Any
 
 
 class Fetcher:
@@ -30,7 +30,7 @@ class Fetcher:
 
 class UniprotFetcher(Fetcher):
     """Fetches relevant data from UniProt.
-    
+
     Column names are here: https://www.uniprot.org/help/uniprotkb_column_names"""
 
     URL = "https://www.uniprot.org/uploadlists/"
@@ -81,8 +81,7 @@ class UniprotFetcher(Fetcher):
 
 
 class TaskFetcherInterface(metaclass=ABCMeta):
-    """Any subclass of this class should implement `fetch_callback` and `parse_callback`.
-    """
+    """Any subclass of this class should implement `fetch_callback` and `parse_callback`."""
 
     @staticmethod
     @abstractmethod
@@ -107,7 +106,7 @@ class SequenceFetcher(TaskFetcherInterface):
         column = df["Sequence"]
         genes = df.index
         parsed = {gene: sequence for gene, sequence in zip(genes, column)}
-        return {"sequence" : parsed}
+        return {"sequence": parsed}
 
 
 class LocalizationFetcher(TaskFetcherInterface):
@@ -123,12 +122,14 @@ class LocalizationFetcher(TaskFetcherInterface):
         genes = df.index
         parsed = {}
         for value, gene in zip(column, genes):
-            value = re.sub(r"^[^:]*:", "", value)      # Remove column identifier
-            value = re.sub(r"\{[^}]*\}", "", value)    # Remove content in braces
-            value = re.sub(r"Note=(.*)", "", value)    # Remove any freeform "Note" text
-            value = re.sub(r"[.;]", ",", value)        # Replace ";" and "." characters with ","
+            value = re.sub(r"^[^:]*:", "", value)  # Remove column identifier
+            value = re.sub(r"\{[^}]*\}", "", value)  # Remove content in braces
+            value = re.sub(r"Note=(.*)", "", value)  # Remove any freeform "Note" text
+            value = re.sub(r"[.;]", ",", value)  # Replace ";" and "." characters with ","
             categories = [
-                category.strip() for category in value.split(",") if not category.isspace() and category != ""
+                category.strip()
+                for category in value.split(",")
+                if not category.isspace() and category != ""
             ]  # Remove whitespace around categories and drop whitespace and empty strings
             parsed[gene] = categories
         return {"subcellular_localization": parsed}

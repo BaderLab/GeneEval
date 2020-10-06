@@ -75,16 +75,15 @@ def evaluate_predictions(
 
     results = recursive_defaultdict()
 
-    for task_name, tasks in predictions.items():
-        for task_type, partitions in tasks.items():
-            metric = AutoMetric(f"{task_name}.{task_type}")
-            for partition, data in partitions.items():
-                data = {k: data[k] for k in benchmark["evals"][task_name][task_type][partition]}
-                y_true = list(benchmark["evals"][task_name][task_type][partition].values())
-                y_pred = list(data.values())
-                results[task_name][task_type][partition][metric.__name__] = round(
-                    metric(y_true, y_pred), 2
-                )
+    for task, partitions in predictions.items():
+        metric = AutoMetric(task)
+        for partition, data in partitions.items():
+            # This will throw an error if the user did not provide a prediction for any
+            # IDs in the benchmark.
+            data = {k: data[k] for k in benchmark[task][partition]}
+            y_true = list(benchmark[task][partition].values())
+            y_pred = list(data.values())
+            results[task][partition][metric.__name__] = round(metric(y_true, y_pred), 2)
     print(
         orjson.dumps(results, option=orjson.OPT_INDENT_2 | orjson.OPT_SERIALIZE_NUMPY).decode("utf")
     )

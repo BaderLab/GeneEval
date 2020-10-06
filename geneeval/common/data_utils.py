@@ -3,7 +3,8 @@ from typing import Union
 from pathlib import Path
 import orjson
 
-BENCHMARK_FILEPATH = "benchmark.json"
+BENCHMARK_FILEPATH = Path.home() / ".geneeval" / "benchmark.json"
+BENCHMARK_FILEPATH.parents[0].mkdir(parents=True, exist_ok=True)
 
 
 def load_features(filepath: Union[str, Path], **kwargs) -> pd.DataFrame:

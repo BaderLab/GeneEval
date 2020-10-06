@@ -1,7 +1,12 @@
-from typing import List, Union
+from typing import List
 
-from geneeval.common.utils import TASK_NAMES
-from .fetchers import Fetcher, UniprotFetcher, OtherDataFetcher, LocalizationFetcher, SequenceFetcher
+from geneeval.common.utils import TASKS
+from .fetchers import (
+    Fetcher,
+    UniprotFetcher,
+    LocalizationFetcher,
+    SequenceFetcher,
+)
 
 
 class AutoFetcher:
@@ -17,11 +22,10 @@ class AutoFetcher:
         fetcher = Fetcher()
 
         uniprot_fetcher = UniprotFetcher()
-        other_data_fetcher = None
 
         for task in tasks:
-            if task not in TASK_NAMES:
-                raise ValueError(f"task must be one of: {TASK_NAMES}. Got: {task}")
+            if task not in TASKS:
+                raise ValueError(f"task must be one of: {', '.join(TASKS)}. Got: {task}")
 
         for task in tasks:
 

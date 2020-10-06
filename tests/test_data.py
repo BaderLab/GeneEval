@@ -10,7 +10,8 @@ class TestDatasetReader:
         self, benchmark_filepath_manager, features_dataframe: pd.DataFrame
     ) -> None:
         data = DatasetReader(
-            features=features_dataframe, task="subcellular_localization.binary_classification",
+            features=features_dataframe,
+            task="subcellular_localization",
         )
 
         assert_array_equal(

@@ -1,11 +1,13 @@
-from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
-from typing import Dict
-import numpy as np
-from sklearn.model_selection import PredefinedSplit
 from dataclasses import dataclass
+from typing import Dict, Optional, Union
+
+import numpy as np
 import pandas as pd
+from sklearn.model_selection import PredefinedSplit
+from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
+
 from geneeval.common.data_utils import load_benchmark
-from geneeval.common.utils import CLASSIFICATION
+from geneeval.common.utils import CLASSIFICATION, TASKS
 
 
 @dataclass(frozen=True)
@@ -15,15 +17,21 @@ class PreprocessedData:
     X_test: np.ndarray
     y_test: np.ndarray
     splits: PredefinedSplit
+    lb: Union[LabelBinarizer, MultiLabelBinarizer]
 
 
 class DatasetReader:
     """Given a dataframe of gene features, returns a `PreprocessedData` containing everything we
     need to train and evaluate with Sklearn."""
 
-    def __new__(self, features: pd.DataFrame, task: str) -> Dict[str, PreprocessedData]:
+    def __new__(
+        self, features: pd.DataFrame, task: str, benchmark_filepath: Optional[str] = None
+    ) -> Dict[str, PreprocessedData]:
 
-        benchmark = load_benchmark()
+        if task not in TASKS:
+            raise ValueError(f"task must be one of: {', '.join(TASKS)}. Got: {task}")
+
+        benchmark = load_benchmark(filepath=benchmark_filepath)
         partitions = benchmark[task]
 
         if task in CLASSIFICATION:
@@ -53,6 +61,6 @@ class DatasetReader:
             splits = PredefinedSplit(test_fold)
 
         else:
-            pass
+            raise NotImplementedError("Regression is not currently supported.")
 
-        return PreprocessedData(X_train, y_train, X_test, y_test, splits)
+        return PreprocessedData(X_train, y_train, X_test, y_test, splits, lb)

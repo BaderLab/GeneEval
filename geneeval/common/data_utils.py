@@ -1,7 +1,8 @@
-import pandas as pd
-from typing import Union
 from pathlib import Path
+from typing import Optional, Union
+
 import orjson
+import pandas as pd
 
 from .utils import BENCHMARK_FILEPATH
 
@@ -29,6 +30,6 @@ def load_features(filepath: Union[str, Path], **kwargs) -> pd.DataFrame:
     return features.astype("float32", copy=False)
 
 
-def load_benchmark():
-    with open(BENCHMARK_FILEPATH, "r") as f:
+def load_benchmark(filepath: Optional[str] = None):
+    with open(filepath or BENCHMARK_FILEPATH, "r") as f:
         return orjson.loads(f.read())

@@ -1,6 +1,8 @@
-from typing import List
+from typing import List, Union
 
 from geneeval.common.utils import TASKS
+from pathlib import Path
+
 from .fetchers import (
     Fetcher,
     UniprotFetcher,
@@ -15,17 +17,16 @@ class AutoFetcher:
     A `Fetcher` is returned which requests all the data relevant to `tasks` in a single call to its
     `fetch` method. This ensures the API endpoints are only queried once, rather than for every
     task individually.
+
+    NOTE: It is assumed that a `benchmark.json` file already exists, with at least the gene IDs present.
+    This file can be created by running the `get_protein_ids.py` file in `scripts`.
     """
 
-    def __new__(cls, tasks: List[str]):
+    def __new__(cls, tasks: List[str]) -> Fetcher:
 
         fetcher = Fetcher()
 
         uniprot_fetcher = UniprotFetcher()
-
-        for task in tasks:
-            if task not in TASKS:
-                raise ValueError(f"task must be one of: {', '.join(TASKS)}. Got: {task}")
 
         for task in tasks:
 

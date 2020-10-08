@@ -1,5 +1,8 @@
 from typing import Optional, List, Union
 from sklearn.metrics import f1_score
+import numpy as np
+from pathlib import Path
+from skmultilearn.model_selection import iterative_train_test_split
 
 CLASSIFICATION = {
     "subcellular_localization",
@@ -7,6 +10,13 @@ CLASSIFICATION = {
 REGRESSION = set()
 TASKS = CLASSIFICATION | REGRESSION
 METRICS = {"subcellular_localization": f1_score}
+
+TRAIN_SIZE = 0.7
+VALID_SIZE = 0.1
+TEST_SIZE = 0.2
+
+BENCHMARK_FILEPATH = Path.home() / ".geneeval" / "benchmark.json"
+BENCHMARK_FILEPATH.parents[0].mkdir(parents=True, exist_ok=True)
 
 
 def resolve_tasks(
@@ -49,3 +59,11 @@ def resolve_tasks(
                     resolved_tasks.update(resolved_task)
 
             return list(resolved_tasks & TASKS if include_tasks else resolved_tasks - TASKS)
+
+
+def multi_label_split(X: np.array, y: np.array):
+    X_train, y_train, X_test, y_test = iterative_train_test_split(X, y, test_size=1 - TRAIN_SIZE)
+    X_valid, y_valid, X_test, y_test = iterative_train_test_split(
+        X_test, y_test, test_size=TEST_SIZE / (TEST_SIZE + VALID_SIZE)
+    )
+    return X_train, y_train, X_valid, y_valid, X_test, y_test

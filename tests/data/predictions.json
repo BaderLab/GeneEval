@@ -1,17 +1,15 @@
 {
-    "subcellular_localization": {
-      "binary_classification": {
-        "train": {
+  "subcellular_localization": {
+      "train": {
           "Q8W5R2": "M",
-          "Q99732": "M",
-          "P83774": "S"
-        },
-        "valid": {
-          "Q1ENB6": "S"
-        },
-        "test": {
-          "Q9XF19": "S"
-        }
+          "Q8L5Y0": "M",
+          "Q9VP48": "S"
+      },
+      "valid": {
+          "P32916": "S"
+      },
+      "test": {
+          "Q9BVK8": "S"
       }
-    }
+  }
 }

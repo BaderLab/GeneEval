@@ -1,9 +1,10 @@
-import pytest
-from hypothesis.strategies import text
-from hypothesis import given
-from geneeval.common.data_utils import load_features
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
+import pytest
+from geneeval.common.data_utils import load_features
+from hypothesis import given
+from hypothesis.strategies import text
 
 
 class TestDataUtils:
@@ -18,14 +19,14 @@ class TestDataUtils:
     ) -> None:
         # Pass a keyword that we know causes a certain error as a check that kwargs is working.
         with pytest.raises(ValueError):
-            load_features(features_json_filepath, orient="split")
+            _ = load_features(features_json_filepath, orient="split")
 
     def test_can_pass_kwargs_read_csv(
         self, features_dataframe: pd.DataFrame, features_csv_filepath: Path
     ) -> None:
         # Pass a keyword that we know causes a certain error as a check that kwargs is working.
         with pytest.raises(ValueError):
-            assert load_features(features_csv_filepath, delim_whitespace=True)
+            _ = load_features(features_csv_filepath, delim_whitespace=True)
 
     def test_load_features_json(
         self, features_dataframe: pd.DataFrame, features_json_filepath: Path

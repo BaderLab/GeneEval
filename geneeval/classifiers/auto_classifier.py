@@ -1,11 +1,9 @@
 from typing import Tuple
 
-from geneeval.classifiers.supervised_classifiers import (
-    LRClassifier,
-    MLPClassifier,
-    SupervisedClassifier,
-)
-from geneeval.common.utils import TASKS, CLASSIFICATION, REGRESSION
+from geneeval.classifiers.supervised_classifiers import (LRClassifier,
+                                                         MLPClassifier,
+                                                         SupervisedClassifier)
+from geneeval.common.utils import CLASSIFICATION, TASKS
 from geneeval.data import PreprocessedData
 
 
@@ -16,10 +14,10 @@ class AutoClassifier:
         self, task: str, data: PreprocessedData
     ) -> Tuple[SupervisedClassifier, SupervisedClassifier]:
 
-        if task in CLASSIFICATION:
-            # return LRClassifier(data, metric=metric), MLPClassifier(data, metric=metric)
-            return LRClassifier(data), MLPClassifier(data)
-        elif task in REGRESSION:
-            pass
-        else:
+        if task not in TASKS:
             raise ValueError(f"task must be one of: {', '.join(TASKS)}. Got: {task}")
+
+        if task in CLASSIFICATION:
+            return LRClassifier(data), MLPClassifier(data)
+        else:
+            return LRClassifier(data), MLPClassifier(data)

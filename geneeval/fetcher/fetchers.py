@@ -1,23 +1,18 @@
 import io
-import re
 import json
-from pathlib import Path
+import re
+from abc import ABCMeta, abstractmethod
 from collections import Counter
 from tempfile import TemporaryFile
-from abc import ABCMeta, abstractmethod
-from typing import List, Tuple, Callable, Union, Dict, Any, Optional
-
-import requests
-from requests.adapters import HTTPAdapter
-from requests.exceptions import ConnectionError
+from typing import Any, Callable, Dict, List, Tuple
 
 import numpy as np
 import pandas as pd
+import requests
+from geneeval.common.utils import BENCHMARK_FILEPATH, multi_label_split
+from requests.adapters import HTTPAdapter
+from requests.exceptions import ConnectionError
 from sklearn.preprocessing import MultiLabelBinarizer
-
-from abc import ABCMeta, abstractmethod
-from typing import List, Callable, Dict, Any
-from geneeval.common.utils import multi_label_split, BENCHMARK_FILEPATH
 
 
 class Fetcher:

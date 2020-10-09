@@ -1,8 +1,10 @@
+from typing import List, Optional, Union
+
 import pandas as pd
-from typing import Optional, List, Union
+
+from geneeval.classifiers.auto_classifier import AutoClassifier
 from geneeval.common.utils import resolve_tasks
 from geneeval.data import DatasetReader
-from geneeval.classifiers.auto_classifier import AutoClassifier
 
 
 class Engine:
@@ -30,7 +32,6 @@ class Engine:
                 for estimator, model in zip(classifier, results):
                     estimator.fit()
                     results[model] = estimator.score()
-                    print(estimator.score())
             else:
                 estimator = classifier
                 estimator.fit()

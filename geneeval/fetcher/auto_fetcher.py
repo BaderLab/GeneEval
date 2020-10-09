@@ -1,7 +1,6 @@
 from typing import List
 
-from .fetchers import (Fetcher, LocalizationFetcher, SequenceFetcher,
-                       UniprotFetcher)
+from geneeval.fetcher.fetchers import Fetcher, LocalizationFetcher, SequenceFetcher, UniprotFetcher
 
 
 class AutoFetcher:

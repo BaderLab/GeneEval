@@ -1,14 +1,15 @@
-from functools import partial
 from typing import Dict, List, Optional, Union
 
 import numpy as np
+import torch
 from geneeval.data import PreprocessedData
+from geneeval.metrics.auto_metric import f1_micro_score
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.metrics import make_scorer
 from sklearn.model_selection import GridSearchCV
 from sklearn.multiclass import OneVsRestClassifier
-from skorch import NeuralNetClassifier
+from skorch import NeuralNet
 from torch import nn
 
 
@@ -44,6 +45,7 @@ class SupervisedClassifier:
         """Wrapper around `self.estimator.score`."""
         X_valid = self.data.X_train[self.data.splits.test_fold == 0]
         y_valid = self.data.y_train[self.data.splits.test_fold == 0]
+
         return {
             "valid": {self.metric.__name__: self.estimator.score(X_valid, y_valid)},
             "test": {
@@ -58,9 +60,6 @@ class LRClassifier(SupervisedClassifier):
     def __init__(self, data: PreprocessedData) -> None:
         multi_class: bool = data.y_train.shape[-1] > 1
         multi_label: bool = np.sum(data.y_train, axis=-1).max() > 1
-
-        f1_micro_score = partial(metrics.f1_score, average="micro")
-        f1_micro_score.__name__ = "f1_micro_score"
 
         metric = f1_micro_score if multi_class or multi_label else metrics.accuracy_score
         estimator = LogisticRegressionCV(cv=data.splits, refit=True)
@@ -84,16 +83,17 @@ class MLPClassifier(SupervisedClassifier):
         multi_class = num_classes > 1
         multi_label = np.sum(data.y_train, axis=-1).max() > 1
 
-        f1_micro_score = partial(metrics.f1_score, average="micro")
-        f1_micro_score.__name__ = "f1_micro_score"
-
         metric = f1_micro_score if multi_class or multi_label else metrics.accuracy_score
         criterion = nn.BCEWithLogitsLoss if multi_label else nn.CrossEntropyLoss
+        predict_nonlinearity = (
+            lambda x: torch.sigmoid(x) >= 0.5 if multi_label else "auto"
+        )  # noqa: E731
 
-        estimator = NeuralNetClassifier(
+        estimator = NeuralNet(
             module=MLP,
             criterion=criterion,
             train_split=None,
+            predict_nonlinearity=predict_nonlinearity,
             module__embedding_dim=embedding_dim,
             module__num_classes=num_classes,
         )

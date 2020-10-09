@@ -1,8 +1,10 @@
 from typing import Tuple
 
-from geneeval.classifiers.supervised_classifiers import (LRClassifier,
-                                                         MLPClassifier,
-                                                         SupervisedClassifier)
+from geneeval.classifiers.supervised_classifiers import (
+    LRClassifier,
+    MLPClassifier,
+    SupervisedClassifier,
+)
 from geneeval.common.utils import CLASSIFICATION, TASKS
 from geneeval.data import PreprocessedData
 

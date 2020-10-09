@@ -1,13 +1,17 @@
-import typer
-from typing import List
+from collections import defaultdict
 from pathlib import Path
+from typing import List
+
+import numpy as np
+import orjson
+import typer
+from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
+
+from geneeval.common.data_utils import load_benchmark, load_features
+from geneeval.common.utils import BENCHMARK_FILEPATH, TASKS, resolve_tasks
 from geneeval.engine import Engine
 from geneeval.fetcher.auto_fetcher import AutoFetcher
-from geneeval.common.utils import resolve_tasks, TASKS, BENCHMARK_FILEPATH
-from geneeval.common.data_utils import load_features, load_benchmark
 from geneeval.metrics.auto_metric import AutoMetric
-import orjson
-from collections import defaultdict
 
 app = typer.Typer()
 evaluate_app = typer.Typer()
@@ -106,12 +110,17 @@ def evaluate_predictions(
 
     for task, partitions in predictions.items():
         metric = AutoMetric(task)
+        # Fit the label binarizer on the train set of the benchmark.
+        multilabel = (
+            isinstance(list(benchmark[task]["train"].values())[0], list)
+            and len(max(list(benchmark[task]["train"].values()), key=len)) > 1
+        )
+        lb = MultiLabelBinarizer() if multilabel else LabelBinarizer()
+        lb.fit(list(benchmark[task]["train"].values()))
+
         for partition, data in partitions.items():
-            # This will throw an error if the user did not provide a prediction for any
-            # IDs in the benchmark.
-            data = {k: data[k] for k in benchmark[task][partition]}
-            y_true = list(benchmark[task][partition].values())
-            y_pred = list(data.values())
+            y_true = lb.transform(list(benchmark[task][partition].values())).astype(np.float32)
+            y_pred = lb.transform(list(data.values())).astype(np.float32)
             results[task][partition][metric.__name__] = round(metric(y_true, y_pred), 2)
     print(
         orjson.dumps(results, option=orjson.OPT_INDENT_2 | orjson.OPT_SERIALIZE_NUMPY).decode("utf")

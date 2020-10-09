@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, Optional, Union
+from typing import Dict, Union
 
 import numpy as np
 import pandas as pd
@@ -24,17 +24,16 @@ class DatasetReader:
     """Given a dataframe of gene features, returns a `PreprocessedData` containing everything we
     need to train and evaluate with Sklearn."""
 
-    def __new__(
-        self, features: pd.DataFrame, task: str, benchmark_filepath: Optional[str] = None
-    ) -> Dict[str, PreprocessedData]:
+    def __new__(self, features: pd.DataFrame, task: str) -> Dict[str, PreprocessedData]:
 
         if task not in TASKS:
             raise ValueError(f"task must be one of: {', '.join(TASKS)}. Got: {task}")
 
-        benchmark = load_benchmark(filepath=benchmark_filepath)
+        benchmark = load_benchmark()
         partitions = benchmark[task]
 
         if task in CLASSIFICATION:
+
             # If the labels are a list with length > 1 it is multilabel
             data = list(partitions.values())
             multilabel: bool = isinstance(data, list) and len(max(data, key=len)) > 1
@@ -47,12 +46,10 @@ class DatasetReader:
             X_test = features.loc[list(partitions["test"].keys())].values
 
             # fit_transform partitions together so binarization is the same across partitions.
-            binarized_labels = lb.fit_transform(
-                [label for partition in partitions.values() for label in partition.values()]
-            ).astype(np.float)
-
-            y_train = binarized_labels[: X_train.shape[0]]
-            y_test = binarized_labels[X_train.shape[0] :]
+            y_train = lb.fit_transform(
+                list(partitions["train"].values()) + list(partitions["valid"].values())
+            ).astype(np.float32)
+            y_test = lb.transform(list(partitions["test"].values())).astype(np.float32)
 
             if y_train.shape[-1] == 1 and y_test.shape[-1] == 1:
                 y_train, y_test = y_train.squeeze(-1), y_test.squeeze(-1)

@@ -8,11 +8,11 @@
   },
   "subcellular_localization": {
       "train": {
-          "Q8W5R2": [
-              "vacuole membrane"
+          "P32916": [
+              "cytoplasmic side",
+              "endoplasmic reticulum membrane"
           ],
           "Q8L5Y0": [
-              "cytoplasmic side",
               "vacuole membrane"
           ],
           "Q9VP48": [
@@ -21,9 +21,8 @@
           ]
       },
       "valid": {
-          "P32916": [
-              "cytoplasmic side",
-              "endoplasmic reticulum membrane"
+          "Q8W5R2": [
+              "vacuole membrane"
           ]
       },
       "test": {

@@ -1,8 +1,8 @@
 import pytest
-from hypothesis.strategies import text
+from geneeval.common.utils import TASKS
+from geneeval.metrics.auto_metric import _METRICS, AutoMetric
 from hypothesis import given
-from geneeval.common.utils import TASKS, METRICS
-from geneeval.metrics.auto_metric import AutoMetric
+from hypothesis.strategies import text
 
 
 class TestAutoMetric:
@@ -14,4 +14,4 @@ class TestAutoMetric:
     def test_autometric(self) -> None:
         for task in TASKS:
             metric = AutoMetric(task=task)
-            assert metric == METRICS[task]
+            assert metric == _METRICS[task]

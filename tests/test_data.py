@@ -12,13 +12,12 @@ class TestDatasetReader:
     def test_dataset_reader(
         self,
         features_dataframe: pd.DataFrame,
-        benchmark_filepath: str,
+        benchmark_filepath_manager,
         preprocessed_data: PreprocessedData,
     ) -> None:
         data = DatasetReader(
             features=features_dataframe,
             task="subcellular_localization",
-            benchmark_filepath=benchmark_filepath,
         )
 
         assert_array_equal(
@@ -28,10 +27,10 @@ class TestDatasetReader:
         )
         # It is easier to spot errors if we compare to the text labels as oppose to binarized_labels
         data.lb.inverse_transform(data.y_train) == [
-            ("vacuole membrane",),
-            ("cytoplasmic side", "vacuole membrane"),
-            ("cytoplasmic side", "lipid-anchor"),
             ("cytoplasmic side", "endoplasmic reticulum membrane"),
+            ("vacuole membrane",),
+            ("cytoplasmic side", "lipid-anchor"),
+            ("vacuole membrane",),
         ],
 
         assert_array_equal(data.X_test, features_dataframe[4:5])

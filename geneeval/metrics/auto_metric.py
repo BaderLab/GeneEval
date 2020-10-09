@@ -1,5 +1,8 @@
-from geneeval.common.utils import TASKS, METRICS
+from geneeval.common.utils import TASKS
+from geneeval.metrics import f1_micro_score
 from sklearn import metrics
+
+_METRICS = {"subcellular_localization": f1_micro_score}
 
 
 class AutoMetric:
@@ -9,4 +12,4 @@ class AutoMetric:
         if task not in TASKS:
             raise ValueError(f"task must be one of: {', '.join(TASKS)}. Got: {task}")
 
-        return METRICS[task]
+        return _METRICS[task]

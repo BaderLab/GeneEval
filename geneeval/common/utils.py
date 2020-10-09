@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import List, Optional, Set, Tuple, Union
 
 import numpy as np
-from sklearn.metrics import f1_score
 from skmultilearn.model_selection import iterative_train_test_split
 
 CLASSIFICATION = {
@@ -10,7 +9,6 @@ CLASSIFICATION = {
 }
 REGRESSION = set()
 TASKS = CLASSIFICATION | REGRESSION
-METRICS = {"subcellular_localization": f1_score}
 
 TRAIN_SIZE = 0.7
 VALID_SIZE = 0.1

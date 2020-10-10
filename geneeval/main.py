@@ -1,6 +1,6 @@
 from collections import defaultdict
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 
 import numpy as np
 import orjson
@@ -72,7 +72,7 @@ def evaluate_features(
     exclude_tasks: List[str] = typer.Option(
         None, help="A task name (or list of task names) to exclude in the evaluation."
     ),
-) -> None:
+) -> Dict:
     """Evaluate fixed-length feature vectors on the benchmark. Include or exclude specific tasks
     with `include_tasks` and `exclude_tasks` respectively.
     """
@@ -87,6 +87,7 @@ def evaluate_features(
     print(
         orjson.dumps(results, option=orjson.OPT_INDENT_2 | orjson.OPT_SERIALIZE_NUMPY).decode("utf")
     )
+    return results
 
 
 @evaluate_app.command("predictions")
@@ -94,7 +95,7 @@ def evaluate_predictions(
     filepath: Path = typer.Argument(
         ..., exists=True, dir_okay=False, help="Filepath to the gene label predictions."
     ),
-) -> None:
+) -> Dict:
     """Evaluate predictions on the benchmark."""
 
     with open(filepath, "r") as f:
@@ -122,6 +123,8 @@ def evaluate_predictions(
             y_true = lb.transform(list(benchmark[task][partition].values())).astype(np.float32)
             y_pred = lb.transform(list(data.values())).astype(np.float32)
             results[task][partition][metric.__name__] = round(metric(y_true, y_pred), 2)
+
     print(
         orjson.dumps(results, option=orjson.OPT_INDENT_2 | orjson.OPT_SERIALIZE_NUMPY).decode("utf")
     )
+    return results

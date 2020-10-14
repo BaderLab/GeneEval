@@ -41,21 +41,24 @@ class SupervisedClassifier:
         """Wrapper around `self.estimator.fit`."""
         self.estimator.fit(self.data.X_train, self.data.y_train)
 
-    def score(self) -> Dict:
+    def score(self) -> Dict[str, float]:
         """Wrapper around `self.estimator.score`."""
         X_valid = self.data.X_train[self.data.splits.test_fold == 0]
         y_valid = self.data.y_train[self.data.splits.test_fold == 0]
 
+        y_valid_pred = self.estimator.best_estimator_.predict(X_valid)
+        y_test_pred = self.estimator.best_estimator_.predict(self.data.X_test)
+
         return {
-            "valid": {self.metric.__name__: self.estimator.score(X_valid, y_valid)},
-            "test": {
-                self.metric.__name__: self.estimator.score(self.data.X_test, self.data.y_test),
-            },
+            "valid": {self.metric.__name__: self.metric(y_valid, y_valid_pred)},
+            "test": {self.metric.__name__: self.metric(self.data.y_test, y_test_pred)},
         }
 
 
 class LRClassifier(SupervisedClassifier):
     """A logistic regression classifier for classification tasks."""
+
+    __name__ = "logreg"
 
     def __init__(self, data: PreprocessedData) -> None:
         multi_class: bool = data.y_train.shape[-1] > 1
@@ -72,30 +75,40 @@ class MLPClassifier(SupervisedClassifier):
     """A multi-layer perceptron classifier for classification tasks."""
 
     param_grid = {
-        "lr": [1e-4, 5e-5],
+        "lr": [1e-1, 5e-2],
         "module__hidden_dim": [50, 100, 200],
         "module__dropout": [0.0, 0.1, 0.25, 0.5],
     }
 
+    __name__ = "mlp"
+
     def __init__(self, data: PreprocessedData) -> None:
         embedding_dim = data.X_train[0].shape[-1]
         num_classes = data.y_train.shape[-1]
+
         multi_class = num_classes > 1
         multi_label = np.sum(data.y_train, axis=-1).max() > 1
 
         metric = f1_micro_score if multi_class or multi_label else metrics.accuracy_score
         criterion = nn.BCEWithLogitsLoss if multi_label else nn.CrossEntropyLoss
         predict_nonlinearity = (
-            lambda x: torch.sigmoid(x) >= 0.5 if multi_label else "auto"
+            lambda x: (torch.sigmoid(x) >= 0.5).float() if multi_label else "auto"
         )  # noqa: E731
+
+        # Weight classes according to their prevalence in the train set.
+        pos_weights = torch.from_numpy(
+            np.count_nonzero(data.y_train == 0, axis=0) / np.count_nonzero(data.y_train, axis=0)
+        )
 
         estimator = NeuralNet(
             module=MLP,
             criterion=criterion,
             train_split=None,
+            max_epochs=200,
             predict_nonlinearity=predict_nonlinearity,
             module__embedding_dim=embedding_dim,
             module__num_classes=num_classes,
+            criterion__pos_weight=pos_weights,
         )
 
         super().__init__(

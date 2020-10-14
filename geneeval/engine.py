@@ -28,10 +28,10 @@ class Engine:
 
             classifier = AutoClassifier(task, data)
             if isinstance(classifier, tuple):
-                results = {"logreg": None, "mlp": None}
-                for estimator, model in zip(classifier, results):
+                results = {}
+                for estimator in classifier:
                     estimator.fit()
-                    results[model] = estimator.score()
+                    results[estimator.__name__] = estimator.score()
             else:
                 estimator = classifier
                 estimator.fit()

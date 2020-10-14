@@ -20,6 +20,8 @@ class AutoClassifier:
             raise ValueError(f"task must be one of: {', '.join(TASKS)}. Got: {task}")
 
         if task in CLASSIFICATION:
-            return LRClassifier(data), MLPClassifier(data)
+            # TODO: Stick to MLP for now, until we figure out the logreg bug.
+            # return LRClassifier(data), MLPClassifier(data)
+            return (MLPClassifier(data),)
         else:
-            return LRClassifier(data), MLPClassifier(data)
+            raise NotImplementedError("Regression is not currently supported.")

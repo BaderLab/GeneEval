@@ -75,9 +75,10 @@ class MLPClassifier(SupervisedClassifier):
     """A multi-layer perceptron classifier for classification tasks."""
 
     param_grid = {
-        "lr": [1e-1, 5e-2],
+        "lr": [1e-1, 5e-2, 1e-2],
+        "batch_size": [64, 128],
         "module__hidden_dim": [50, 100, 200],
-        "module__dropout": [0.0, 0.1, 0.25, 0.5],
+        "module__dropout": [0.0, 0.1, 0.2],
     }
 
     __name__ = "mlp"
@@ -95,7 +96,7 @@ class MLPClassifier(SupervisedClassifier):
             lambda x: (torch.sigmoid(x) >= 0.5).float() if multi_label else "auto"
         )  # noqa: E731
 
-        # Weight classes according to their prevalence in the train set.
+        # Classes are weighted according to ratio of negative to positive isinstances of that class.
         pos_weights = torch.from_numpy(
             np.count_nonzero(data.y_train == 0, axis=0) / np.count_nonzero(data.y_train, axis=0)
         )
@@ -103,8 +104,9 @@ class MLPClassifier(SupervisedClassifier):
         estimator = NeuralNet(
             module=MLP,
             criterion=criterion,
+            optimizer=torch.optim.Adam,
+            max_epochs=10,
             train_split=None,
-            max_epochs=200,
             predict_nonlinearity=predict_nonlinearity,
             module__embedding_dim=embedding_dim,
             module__num_classes=num_classes,

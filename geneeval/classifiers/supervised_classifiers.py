@@ -95,12 +95,6 @@ class MLPClassifier(SupervisedClassifier):
         predict_nonlinearity = (
             lambda x: (torch.sigmoid(x) >= 0.5).float() if multi_label else "auto"
         )  # noqa: E731
-
-        # Classes are weighted according to ratio of negative to positive isinstances of that class.
-        pos_weights = torch.from_numpy(
-            np.count_nonzero(data.y_train == 0, axis=0) / np.count_nonzero(data.y_train, axis=0)
-        )
-
         estimator = NeuralNet(
             module=MLP,
             criterion=criterion,
@@ -110,7 +104,6 @@ class MLPClassifier(SupervisedClassifier):
             predict_nonlinearity=predict_nonlinearity,
             module__embedding_dim=embedding_dim,
             module__num_classes=num_classes,
-            criterion__pos_weight=pos_weights,
         )
 
         super().__init__(

@@ -538,6 +538,14 @@ threadpoolctl = ">=2.0.0"
 alldeps = ["numpy (>=1.13.3)", "scipy (>=0.19.1)"]
 
 [[package]]
+name = "scikit-multilearn"
+version = "0.2.0"
+description = "Scikit-multilearn is a BSD-licensed library for multi-label classification that is built on top of the well-known scikit-learn ecosystem."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "scipy"
 version = "1.5.3"
 description = "SciPy: Scientific Library for Python"
@@ -707,7 +715,7 @@ features = ["torch", "skorch"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "5b7eb07732ee55b88a202f9e787f87a65eaf3b58f4eda21d5fb96b5a216b75fe"
+content-hash = "d01e9c411385aeb546f59ea3b3f03742ec901179648b80dffda919d81f29a164"
 
 [metadata.files]
 appdirs = [
@@ -1029,6 +1037,11 @@ scikit-learn = [
     {file = "scikit_learn-0.23.2-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:5ce7a8021c9defc2b75620571b350acc4a7d9763c25b7593621ef50f3bd019a2"},
     {file = "scikit_learn-0.23.2-cp38-cp38-win32.whl", hash = "sha256:0d39748e7c9669ba648acf40fb3ce96b8a07b240db6888563a7cb76e05e0d9cc"},
     {file = "scikit_learn-0.23.2-cp38-cp38-win_amd64.whl", hash = "sha256:1b8a391de95f6285a2f9adffb7db0892718950954b7149a70c783dc848f104ea"},
+]
+scikit-multilearn = [
+    {file = "scikit-multilearn-0.2.0.linux-x86_64.tar.gz", hash = "sha256:3179fed29b1492f6a69600696c23045b9f494d2b89d1796a8bdc43ccbb33712b"},
+    {file = "scikit_multilearn-0.2.0-py2-none-any.whl", hash = "sha256:0a389600a6797db6567f2f6ca1d0dca30bebfaaa73f75de62d7ae40f8f03d4fb"},
+    {file = "scikit_multilearn-0.2.0-py3-none-any.whl", hash = "sha256:068c652f22704a084ca252d05d21a655e7c9b248d0a4543847b74de5fca2b3f0"},
 ]
 scipy = [
     {file = "scipy-1.5.3-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:f574558f1b774864516f3c3fe072ebc90a29186f49b720f60ed339294b7f32ac"},

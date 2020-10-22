@@ -5,10 +5,8 @@ import torch
 from geneeval.data import PreprocessedData
 from geneeval.metrics.auto_metric import f1_micro_score
 from sklearn import metrics
-from sklearn.linear_model import LogisticRegressionCV
 from sklearn.metrics import make_scorer
 from sklearn.model_selection import GridSearchCV
-from sklearn.multiclass import OneVsRestClassifier
 from skorch import NeuralNet
 from torch import nn
 
@@ -55,28 +53,13 @@ class SupervisedClassifier:
         }
 
 
-class LRClassifier(SupervisedClassifier):
-    """A logistic regression classifier for classification tasks."""
-
-    __name__ = "logreg"
-
-    def __init__(self, data: PreprocessedData) -> None:
-        multi_class: bool = data.y_train.shape[-1] > 1
-        multi_label: bool = np.sum(data.y_train, axis=-1).max() > 1
-
-        metric = f1_micro_score if multi_class or multi_label else metrics.accuracy_score
-        estimator = LogisticRegressionCV(cv=data.splits, refit=True)
-        if multi_label:
-            estimator = OneVsRestClassifier(estimator)
-        super().__init__(estimator=estimator, data=data, metric=metric)
-
-
 class MLPClassifier(SupervisedClassifier):
     """A multi-layer perceptron classifier for classification tasks."""
 
     param_grid = {
         "lr": [1e-1, 5e-2, 1e-2],
         "batch_size": [64, 128],
+        "module__num_hidden_layers": [0, 1],
         "module__hidden_dim": [50, 100, 200],
         "module__dropout": [0.0, 0.1, 0.2],
     }
@@ -121,17 +104,23 @@ class MLP(nn.Module):
         self,
         embedding_dim: int,
         num_classes: int,
+        num_hidden_layers: int = 1,
         hidden_dim: int = 100,
         dropout: float = 0.1,
     ):
         super().__init__()
 
-        self.model = nn.Sequential(
-            nn.Linear(embedding_dim, hidden_dim),
-            nn.Dropout(dropout),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, num_classes),
-        )
+        if num_hidden_layers == 0:
+            self.model = nn.Sequential(
+                nn.Linear(embedding_dim, num_classes),
+            )
+        else:
+            self.model = nn.Sequential(
+                nn.Linear(embedding_dim, hidden_dim),
+                nn.Dropout(dropout),
+                nn.ReLU(),
+                nn.Linear(hidden_dim, num_classes),
+            )
 
     def forward(self, X, **kwargs):
         return self.model(X)

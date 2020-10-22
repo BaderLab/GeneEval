@@ -27,13 +27,7 @@ class Engine:
             data = DatasetReader(self._features, task)
 
             classifier = AutoClassifier(task, data)
-            if isinstance(classifier, tuple):
-                results = {}
-                for estimator in classifier:
-                    estimator.fit()
-                    results[estimator.__name__] = estimator.score()
-            else:
-                estimator = classifier
-                estimator.fit()
-                results = estimator.score()
+            estimator = classifier
+            estimator.fit()
+            results = estimator.score()
             self.results[task] = results

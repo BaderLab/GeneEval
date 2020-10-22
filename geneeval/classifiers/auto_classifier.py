@@ -1,10 +1,7 @@
 from typing import Tuple
 
-from geneeval.classifiers.supervised_classifiers import (
-    LRClassifier,
-    MLPClassifier,
-    SupervisedClassifier,
-)
+from geneeval.classifiers.supervised_classifiers import (MLPClassifier,
+                                                         SupervisedClassifier)
 from geneeval.common.utils import CLASSIFICATION, TASKS
 from geneeval.data import PreprocessedData
 
@@ -20,8 +17,6 @@ class AutoClassifier:
             raise ValueError(f"task must be one of: {', '.join(TASKS)}. Got: {task}")
 
         if task in CLASSIFICATION:
-            # TODO: Stick to MLP for now, until we figure out the logreg bug.
-            # return LRClassifier(data), MLPClassifier(data)
-            return (MLPClassifier(data),)
+            return MLPClassifier(data)
         else:
             raise NotImplementedError("Regression is not currently supported.")

@@ -1,8 +1,9 @@
-import pytest
 from typing import List
-from hypothesis.strategies import text, lists
+
+import pytest
+from geneeval.common.utils import TASKS, resolve_tasks
 from hypothesis import given
-from geneeval.common.utils import resolve_tasks, TASK_NAMES
+from hypothesis.strategies import lists, text
 
 
 class TestUtils:
@@ -20,32 +21,22 @@ class TestUtils:
     def test_include_tasks_exclude_task_none(self) -> None:
         # We treat falsy values as unspecified, so the full list of task_names should be returned.
         tasks = resolve_tasks()
-        assert tasks == TASK_NAMES
+        assert tasks == TASKS
         tasks = resolve_tasks(include_tasks="")
-        assert tasks == TASK_NAMES
+        assert tasks == TASKS
         tasks = resolve_tasks(include_tasks=[])
-        assert tasks == TASK_NAMES
-
-        tasks = resolve_tasks()
-        assert tasks == TASK_NAMES
-        tasks = resolve_tasks(exclude_tasks="")
-        assert tasks == TASK_NAMES
-        tasks = resolve_tasks(exclude_tasks=[])
-        assert tasks == TASK_NAMES
+        assert tasks == TASKS
 
     def test_include_tasks(self) -> None:
-        task_name = list(TASK_NAMES)[0]
-        partially_specified = resolve_tasks(include_tasks=task_name.split(".")[0])
-        fully_specified = resolve_tasks(include_tasks=task_name)
+        task_name = list(TASKS)[0]
+        expected = {task_name}
+        actual = resolve_tasks(include_tasks=task_name)
 
-        assert partially_specified == ["subcellular_localization.binary_classification"]
-        assert fully_specified == ["subcellular_localization.binary_classification"]
+        assert expected == actual
 
     def test_exclude_tasks(self) -> None:
-        task_name = list(TASK_NAMES)[0]
-        partially_specified = resolve_tasks(exclude_tasks=task_name.split(".")[0])
-        fully_specified = resolve_tasks(exclude_tasks=task_name)
-        expected = list(TASK_NAMES - {task_name})
+        task_name = list(TASKS)[0]
+        expected = TASKS - {task_name}
+        actual = resolve_tasks(exclude_tasks=task_name)
 
-        assert partially_specified == expected
-        assert fully_specified == expected
+        assert expected == actual

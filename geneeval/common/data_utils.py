@@ -1,9 +1,9 @@
-import pandas as pd
-from typing import Union
 from pathlib import Path
-import orjson
+from typing import Union
 
-BENCHMARK_FILEPATH = "benchmark.json"
+import orjson
+import pandas as pd
+from geneeval.common import utils
 
 
 def load_features(filepath: Union[str, Path], **kwargs) -> pd.DataFrame:
@@ -30,5 +30,5 @@ def load_features(filepath: Union[str, Path], **kwargs) -> pd.DataFrame:
 
 
 def load_benchmark():
-    with open(BENCHMARK_FILEPATH, "r") as f:
+    with open(utils.BENCHMARK_FILEPATH, "r") as f:
         return orjson.loads(f.read())

@@ -1,9 +1,8 @@
 import pytest
-from hypothesis.strategies import text
+from geneeval.common.utils import TASKS
+from geneeval.metrics.auto_metric import _METRICS, AutoMetric
 from hypothesis import given
-from geneeval.common.utils import TASK_NAMES
-from geneeval.metrics.auto_metric import AutoMetric
-from sklearn import metrics
+from hypothesis.strategies import text
 
 
 class TestAutoMetric:
@@ -13,7 +12,6 @@ class TestAutoMetric:
             AutoMetric(task)
 
     def test_autometric(self) -> None:
-        for task in TASK_NAMES:
+        for task in TASKS:
             metric = AutoMetric(task=task)
-            if task.endswith("binary_classification"):
-                assert metric == metrics.accuracy_score
+            assert metric == _METRICS[task]

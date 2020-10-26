@@ -1,8 +1,10 @@
+from typing import List, Optional, Union
+
 import pandas as pd
-from typing import Optional, List, Union
+
+from geneeval.classifiers.auto_classifier import AutoClassifier
 from geneeval.common.utils import resolve_tasks
 from geneeval.data import DatasetReader
-from geneeval.classifiers.auto_classifier import AutoClassifier
 
 
 class Engine:
@@ -25,13 +27,7 @@ class Engine:
             data = DatasetReader(self._features, task)
 
             classifier = AutoClassifier(task, data)
-            if isinstance(classifier, tuple):
-                results = {"logreg": None, "mlp": None}
-                for estimator, model in zip(classifier, results):
-                    estimator.fit()
-                    results[model] = estimator.score()
-            else:
-                estimator = classifier
-                estimator.fit()
-                results = estimator.score()
+            estimator = classifier
+            estimator.fit()
+            results = estimator.score()
             self.results[task] = results

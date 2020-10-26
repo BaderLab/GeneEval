@@ -1,17 +1,28 @@
 {
-    "subcellular_localization": {
-      "binary_classification": {
-        "train": {
-          "Q8W5R2": "M",
-          "Q99732": "M",
-          "P83774": "S"
-        },
-        "valid": {
-          "Q1ENB6": "S"
-        },
-        "test": {
-          "Q9XF19": "S"
-        }
+  "subcellular_localization": {
+      "train": {
+          "P32916": [
+              "cytoplasmic side",
+              "endoplasmic reticulum membrane"
+          ],
+          "Q8L5Y0": [
+              "vacuole membrane"
+          ],
+          "Q9VP48": [
+              "cytoplasmic side",
+              "lipid-anchor"
+          ]
+      },
+      "valid": {
+          "Q8W5R2": [
+              "lipid-anchor"
+          ]
+      },
+      "test": {
+          "Q9BVK8": [
+              "endoplasmic reticulum membrane",
+              "cytoplasmic side"
+          ]
       }
-    }
+  }
 }

@@ -1,10 +1,11 @@
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import numpy as np
 import orjson
 import typer
+from sklearn import metrics
 from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
 
 from geneeval.common.data_utils import load_benchmark, load_features
@@ -24,7 +25,7 @@ def build_benchmark() -> None:
     `exclude_tasks` respectively.
     """
 
-    fetcher = AutoFetcher(list(TASKS.keys()))
+    fetcher = AutoFetcher(TASKS)
     benchmark = fetcher.fetch()
     benchmark = {**benchmark, **orjson.loads(BENCHMARK_FILEPATH.read_bytes())}
     benchmark = orjson.dumps(benchmark, option=orjson.OPT_INDENT_2)
@@ -33,7 +34,7 @@ def build_benchmark() -> None:
 
 @app.command()
 def prepare(
-    filepath: Path = typer.Argument(
+    filepath: str = typer.Argument(
         ..., writable=True, help="Filepath to save prepared benchmark file."
     ),
     include_tasks: List[str] = typer.Option(
@@ -42,7 +43,7 @@ def prepare(
     exclude_tasks: List[str] = typer.Option(
         None, help="A task name (or list of task names) to exclude in the prepared data."
     ),
-):
+) -> None:
     tasks = resolve_tasks(include_tasks, exclude_tasks)
     benchmark = load_benchmark()
     prepared_benchmark = {task: benchmark[task] for task in tasks}
@@ -57,19 +58,18 @@ def prepare(
         )
     )  # Find the subset of genes specific to the `tasks` specified
     prepared_benchmark["inputs"] = {gene: benchmark["inputs"][gene] for gene in task_specific_genes}
-    prepared_benchmark = orjson.dumps(prepared_benchmark, option=orjson.OPT_INDENT_2)
-    filepath.write_bytes(prepared_benchmark)
+    Path(filepath).write_bytes(orjson.dumps(prepared_benchmark, option=orjson.OPT_INDENT_2))
 
 
 @evaluate_app.command("features")
 def evaluate_features(
-    filepath: Path = typer.Argument(
+    filepath: str = typer.Argument(
         ..., exists=True, dir_okay=False, help="Filepath to the gene features."
     ),
-    include_tasks: List[str] = typer.Option(
+    include_tasks: Optional[List[str]] = typer.Option(
         None, help="A task name (or list of task names) to include in the evaluation."
     ),
-    exclude_tasks: List[str] = typer.Option(
+    exclude_tasks: Optional[List[str]] = typer.Option(
         None, help="A task name (or list of task names) to exclude in the evaluation."
     ),
 ) -> Dict:
@@ -92,7 +92,7 @@ def evaluate_features(
 
 @evaluate_app.command("predictions")
 def evaluate_predictions(
-    filepath: Path = typer.Argument(
+    filepath: str = typer.Argument(
         ..., exists=True, dir_okay=False, help="Filepath to the gene label predictions."
     ),
 ) -> Dict:
@@ -110,7 +110,7 @@ def evaluate_predictions(
     results = recursive_defaultdict()
 
     for task, partitions in predictions.items():
-        metric = AutoMetric(task)
+        metric: metrics = AutoMetric(task)
         # Fit the label binarizer on the train set of the benchmark.
         multilabel = (
             isinstance(list(benchmark[task]["train"].values())[0], list)

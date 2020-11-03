@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Iterator
 
 import numpy as np
 import orjson
@@ -42,7 +42,7 @@ def benchmark_filepath() -> Path:
 
 
 @pytest.fixture
-def benchmark_filepath_manager(benchmark_filepath: str) -> None:
+def benchmark_filepath_manager(benchmark_filepath: Path) -> Iterator[None]:
     """Temporarily changes the benchmark filepath to the dummy benchmark for testing."""
     prev = utils.BENCHMARK_FILEPATH
     utils.BENCHMARK_FILEPATH = benchmark_filepath

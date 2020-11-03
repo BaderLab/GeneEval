@@ -1,10 +1,11 @@
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
+from geneeval.classifiers import SupervisedClassifier
 from geneeval.classifiers.auto_classifier import AutoClassifier
 from geneeval.common.utils import resolve_tasks
-from geneeval.data import DatasetReader
+from geneeval.data import DatasetReader, PreprocessedData
 
 
 class Engine:
@@ -20,13 +21,13 @@ class Engine:
     ) -> None:
         self._features = features
         self._tasks = resolve_tasks(include_tasks, exclude_tasks)
-        self.results = {}
+        self.results: Dict[str, Dict[str, Dict[str, float]]] = {}
 
     def run(self) -> None:
         for task in self._tasks:
-            data = DatasetReader(self._features, task)
+            data: PreprocessedData = DatasetReader(self._features, task)
 
-            classifier = AutoClassifier(task, data)
+            classifier: SupervisedClassifier = AutoClassifier(task, data)
             estimator = classifier
             estimator.fit()
             results = estimator.score()

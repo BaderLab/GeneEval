@@ -10,7 +10,6 @@ from hypothesis.strategies import text
 class TestDataUtils:
     @given(filepath=text())
     def test_value_error_load_features(self, filepath: str) -> None:
-        filepath = Path(filepath)
         with pytest.raises(ValueError):
             load_features(filepath)
 

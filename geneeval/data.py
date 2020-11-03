@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, Union
+from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -24,7 +24,7 @@ class DatasetReader:
     """Given a dataframe of gene features, returns a `PreprocessedData` containing everything we
     need to train and evaluate with Sklearn."""
 
-    def __new__(self, features: pd.DataFrame, task: str) -> Dict[str, PreprocessedData]:
+    def __new__(self, features: pd.DataFrame, task: str) -> PreprocessedData:
 
         if task not in TASKS:
             raise ValueError(f"task must be one of: {', '.join(TASKS)}. Got: {task}")

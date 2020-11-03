@@ -39,7 +39,7 @@ class SupervisedClassifier:
         """Wrapper around `self.estimator.fit`."""
         self.estimator.fit(self.data.X_train, self.data.y_train)
 
-    def score(self) -> Dict[str, float]:
+    def score(self) -> Dict[str, Dict[str, float]]:
         """Wrapper around `self.estimator.score`."""
         X_valid = self.data.X_train[self.data.splits.test_fold == 0]
         y_valid = self.data.y_train[self.data.splits.test_fold == 0]

@@ -7,7 +7,7 @@ from skmultilearn.model_selection import iterative_train_test_split
 CLASSIFICATION = {
     "subcellular_localization",
 }
-REGRESSION = set()
+REGRESSION: Set[str] = set()
 TASKS = CLASSIFICATION | REGRESSION
 
 TRAIN_SIZE = 0.7

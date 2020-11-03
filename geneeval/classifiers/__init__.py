@@ -1,2 +1,1 @@
-from geneeval.classifiers.supervised_classifiers import (MLPClassifier,
-                                                         SupervisedClassifier)
+from geneeval.classifiers.supervised_classifiers import MLPClassifier, SupervisedClassifier

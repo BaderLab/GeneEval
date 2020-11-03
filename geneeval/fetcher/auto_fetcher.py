@@ -1,4 +1,4 @@
-from typing import List
+from typing import Iterable
 
 from geneeval.fetcher.fetchers import Fetcher, LocalizationFetcher, SequenceFetcher, UniprotFetcher
 
@@ -14,7 +14,7 @@ class AutoFetcher:
     present. This file can be created by running the `get_protein_ids.py` file in `scripts`.
     """
 
-    def __new__(cls, tasks: List[str]) -> Fetcher:
+    def __new__(cls, tasks: Iterable[str]) -> Fetcher:
 
         fetcher = Fetcher()
 

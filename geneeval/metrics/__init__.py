@@ -1,5 +1,6 @@
 from functools import partial
-from sklearn import metrics
 
-f1_micro_score = partial(metrics.f1_score, average="micro")
+from sklearn.metrics import f1_score
+
+f1_micro_score: f1_score = partial(f1_score, average="micro")
 f1_micro_score.__name__ = "f1_micro_score"

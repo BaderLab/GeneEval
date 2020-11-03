@@ -4,7 +4,7 @@ import re
 from abc import ABCMeta, abstractmethod
 from collections import Counter
 from tempfile import TemporaryFile
-from typing import Any, Callable, Dict, List, Tuple
+from typing import IO, Any, Callable, Dict, List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -85,7 +85,7 @@ class UniprotFetcher(Fetcher):
     def _build_columns(self) -> str:
         return ",".join(["id"] + [callback() for callback in self.fetch_callbacks])
 
-    def _create_file(self) -> TemporaryFile:
+    def _create_file(self) -> IO[bytes]:
         benchmark = json.load(BENCHMARK_FILEPATH.open())
         protein_ids = benchmark["inputs"].keys()
         protein_id_file = TemporaryFile()
@@ -180,13 +180,13 @@ class LocalizationFetcher(TaskFetcherInterface):
         return {"subcellular_localization": parsed}
 
     @staticmethod
-    def process_callback(parsed_dct: Dict[str, Any]) -> Dict[str, Dict[str, List[str]]]:
+    def process_callback(parsed_dct: Dict[str, Any]) -> Dict[str, Dict[str, Dict[str, List[str]]]]:
 
         LOCALIZATION_COUNT_UPPER_LIMIT = 1000
         LOCALIZATION_COUNT_LOWER_LIMIT = 50
 
         localization_dct = parsed_dct["subcellular_localization"]
-        counter = Counter()
+        counter: Counter = Counter()
         for localization_list in localization_dct.values():
             counter.update(localization_list)
 

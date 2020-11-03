@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 import numpy as np
 import orjson
 import typer
+from sklearn import metrics
 from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer
 
 from geneeval.common.data_utils import load_benchmark, load_features
@@ -109,7 +110,7 @@ def evaluate_predictions(
     results = recursive_defaultdict()
 
     for task, partitions in predictions.items():
-        metric = AutoMetric(task)
+        metric: metrics = AutoMetric(task)
         # Fit the label binarizer on the train set of the benchmark.
         multilabel = (
             isinstance(list(benchmark[task]["train"].values())[0], list)

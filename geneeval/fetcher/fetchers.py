@@ -123,12 +123,12 @@ class TaskFetcherInterface(metaclass=ABCMeta):
 
     @staticmethod
     @abstractmethod
-    def parse_callback() -> Any:
+    def parse_callback(df: pd.DataFrame) -> Any:
         pass
 
     @staticmethod
     @abstractmethod
-    def process_callback() -> Any:
+    def process_callback(parsed_dct: Dict[str, Any]) -> Any:
         pass
 
 

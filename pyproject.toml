@@ -38,7 +38,7 @@ pytest = "^6.1.1"
 pytest-cov = "^2.10.0"
 coverage = "^5.2.1"
 codecov = "^2.1.8"
-ipython = "^7.18.1"
+ipython = "^8.11.0"
 fastaparser = "^1.1"
 
 [tool.poetry.scripts]
